@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import plotly.graph_objects as go
+from IPython.display import display
+import matplotlib.pyplot as plt
 
 
 # For other spreadsheet use this in reading csv
@@ -54,6 +57,7 @@ price_status = None
 
 print(swing_high)
 
+fig = go.Figure()
 
 # Itterating logic starts
 for i, row in df.iloc[1:].iterrows():
@@ -78,7 +82,6 @@ for i, row in df.iloc[1:].iterrows():
 
     df.at[i, 'Price_Status'] = price_status
     # ================================================================================================== #
-
     if current_trend == 'Uptrend':
         if current_high > previous_high and not bullish_pullback:
             higher_high = current_high
@@ -101,6 +104,8 @@ for i, row in df.iloc[1:].iterrows():
                 df.at[i, 'Swing_Low'] = swing_low
             bullish_pullback_count = 0
             bullish_pullback = False
+        # else:
+        #     swing_low = previous_low
 
     elif current_trend == 'Downtrend':
         if current_low > previous_low and not bearish_pullback:
@@ -124,6 +129,22 @@ for i, row in df.iloc[1:].iterrows():
             bearish_pullback_count = 0
             bearish_pullback = False
 
+    # Defining the first Swing High & Swing Low
+    if current_trend == 'Downtrend' and uptrend_lowest_pullback is None:
+        if current_low < previous_low:
+            swing_low = current_low
+    elif current_trend == 'Uptrend' and downtrend_highest_pullback is None:
+        if current_high > previous_high:
+            swing_high = current_high
+
     previous_low = current_low
     previous_high = current_high
-print(df)
+    fig.add_trace(go.Candlestick(x=[i],
+                                 open=[row['Open']],
+                                 high=[row['High']],
+                                 low=[row['Low']],
+                                 close=[row['Close']],
+                                 name=f'Candle {i}'))
+
+    # Display the updated figure
+    display(fig.show())
