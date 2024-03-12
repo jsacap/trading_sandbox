@@ -1,0 +1,3 @@
+Just recently removed the redundant logic in downtrend as this was resetting bearish_pullback_count to 0
+unnecessarily which prevented the swing_low to every be updated since a pullback was never detected.
+current_low = 147.815
