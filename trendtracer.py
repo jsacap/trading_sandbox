@@ -114,7 +114,7 @@ for i, row in df.iloc[1:].iterrows():
                 higher_high = current_high
         if current_close < higher_high and candle_type == 'Bear':
             bullish_pullback_count += 1
-        if bullish_pullback >= 2:
+        if bullish_pullback_count >= 2:
             bullish_pullback = True
             swing_high = higher_high
 
